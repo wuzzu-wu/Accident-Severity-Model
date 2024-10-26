@@ -1,0 +1,38 @@
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+import joblib
+
+data = {
+    'Road_Type': [1, 2, 3, 1, 2, 3, 1, 2, 3],
+    'Weather_Conditions': [1, 2, 1, 2, 3, 3, 1, 2, 2],
+    'Speed_Limit': [60, 40, 50, 70, 30, 40, 60, 50, 70],
+    'Time_of_Day': [1, 2, 1, 2, 1, 2, 1, 2, 2],
+    'Traffic_Signals': [0, 1, 0, 1, 0, 1, 0, 0, 1],
+    'Accident_Severity': [3, 4, 2, 4, 5, 3, 2, 3, 4]
+}
+
+df = pd.DataFrame(data)
+
+X = df[['Road_Type', 'Weather_Conditions', 'Speed_Limit', 'Time_of_Day', 'Traffic_Signals']]
+y = df['Accident_Severity']
+
+model = LinearRegression()
+model.fit(X, y)
+
+
+joblib.dump(model, 'accident_severity_model.pkl')
+
+
+loaded_model = joblib.load('accident_severity_model.pkl')
+
+hypothetical_data = pd.DataFrame({
+    'Road_Type': [1],
+    'Weather_Conditions': [2],
+    'Speed_Limit': [90],
+    'Time_of_Day': [1],
+    'Traffic_Signals': [1]
+})
+
+severity_prediction = loaded_model.predict(hypothetical_data)
+
+print(f'Predicted Accident Severity: {severity_prediction[0]}')
